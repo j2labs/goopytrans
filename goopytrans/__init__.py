@@ -129,8 +129,6 @@ def get_long_name(abbrev):
             return lang[1]
     raise ValueError
     
-_api_url = "http://ajax.googleapis.com/ajax/services/language/translate"
-
 def _unicode_urlencode(params):
     """
     A unicode aware version of urllib.urlencode. Borrowed from
@@ -141,11 +139,10 @@ def _unicode_urlencode(params):
     return urllib.urlencode([(k, isinstance(v, unicode) and v.encode('utf-8') or v)
                              for k, v in params])
 
-def _run_query(args):
+def _run_query(url, args):
     """
     takes arguments and optional language argument and runs query on server
     """
-    url = _api_url
     data = _unicode_urlencode(args)
     search_results = urllib.urlopen(url, data=data)
     json = simplejson.loads(search_results.read())
@@ -156,12 +153,13 @@ def translate(text, source='fr', target='en'):
     Takes some text, source language and target language. Returns
     either the translated text or a ValueError.
     """
+    url = "http://ajax.googleapis.com/ajax/services/language/translate"
     params = {
         'langpair': '%s|%s' % (source, target),
         'v': '1.0',
         'q': text,
     }
-    response = _run_query(params)
+    response = _run_query(url, params)
     if response['responseStatus'] == 200:
         return response['responseData']['translatedText']
     else:

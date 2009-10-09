@@ -139,12 +139,15 @@ def _unicode_urlencode(params):
     return urllib.urlencode([(k, isinstance(v, unicode) and v.encode('utf-8') or v)
                              for k, v in params])
 
-def _run_query(url, args):
+def _run_query(url, args=None):
     """
     takes arguments and optional language argument and runs query on server
     """
-    data = _unicode_urlencode(args)
-    search_results = urllib.urlopen(url, data=data)
+    if args != None:
+        data = _unicode_urlencode(args)
+        search_results = urllib.urlopen(url, data=data)
+    else:
+        search_results = urllib.urlopen(url)
     json = simplejson.loads(search_results.read())
     return json
 
@@ -176,6 +179,25 @@ def translate_list(sentences, source='fr', target='en'):
         response = translate(s, source, target)
         results.append(response)
     return results
+
+def detect(text):
+    """
+    Takes some text and asks Google to detect the language
+    Returns a dictionary with 'language', 'isReliable' and 'confidence' keys
+    """
+    url = 'http://ajax.googleapis.com/ajax/services/language/detect?%s'
+    args = _unicode_urlencode({
+        'v': '1.0',
+        'q': text,
+    })
+    query_url = url % (args)
+    response = _run_query(query_url)
+    if response['responseStatus'] == 200:
+        return {'isReliable': response['responseData']['isReliable'],
+                'confidence': response['responseData']['confidence'],
+                'language': response['responseData']['language']}
+    else:
+        return ValueError
  
 if __name__=='__main__':
     text = raw_input('text :: ')

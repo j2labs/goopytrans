@@ -3,7 +3,7 @@ Goopytrans
 
 Goopytrans is a Python library for interfacing with Google's translation API.
 
-Goopytrans is licensed under the [Apache Licence, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html>
+Goopytrans is licensed under the [Apache Licence, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Features
 --------

@@ -1,4 +1,4 @@
-Wikipydia
+Goopytrans
 =======
 
 Goopytrans is a Python library for interfacing with Google's translation API.

@@ -151,31 +151,37 @@ def _run_query(args):
     json = simplejson.loads(search_results.read())
     return json
 
-def translate(sentences, source='fr', target='en'):
+def translate(text, source='fr', target='en'):
     """
-    Takes a list of sentences, source language and target language.
-    Returns a list of sentence translations. Places a ValueError in list
-    when sentence cannot be translated.
+    Takes some text, source language and target language. Returns
+    either the translated text or a ValueError.
     """
     params = {
         'langpair': '%s|%s' % (source, target),
         'v': '1.0',
+        'q': text,
     }
+    response = _run_query(params)
+    if response['responseStatus'] == 200:
+        return response['responseData']['translatedText']
+    else:
+        return ValueError
+
+def translate_list(sentences, source='fr', target='en'):
+    """
+    Takes a list of texts, source language and target language.
+    Returns a list of text translations. Places a ValueError in list
+    when sentence cannot be translated.
+    """
     results = list()
     for s in sentences:
-        params['q'] = s
-        response = _run_query(params)
-        if response['responseStatus'] == 200:
-            results.append(response['responseData']['translatedText'])
-        else:
-            results.append(ValueError)
+        response = translate(s, source, target)
+        results.append(response)
     return results
  
 if __name__=='__main__':
     text = raw_input('text :: ')
-    language = raw_input('lang :: ')
-    sentences = list()
-    sentences.append(text)
-    translated_text = translate(sentences, source=language, target='en')
-    print "\ntranslated :: %s" % (translated_text[0])
+    language = raw_input('\nlang :: ')
+    translated_text = translate(text, source=language, target='en')
+    print "\ntranslated :: %s" % (translated_text)
     

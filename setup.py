@@ -3,7 +3,7 @@
 from distutils.core import setup
  
 setup(name='goopytrans',
-      version='0.1',
+      version='0.1.1',
       description='Python Client Library for Google\'s translation API',
       author='James Dennis',
       author_email='jd@j2labs.net',

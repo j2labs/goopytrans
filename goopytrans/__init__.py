@@ -166,7 +166,7 @@ def translate(text, source='fr', target='en'):
     if response['responseStatus'] == 200:
         return response['responseData']['translatedText']
     else:
-        return ValueError
+        raise ValueError
 
 def translate_list(sentences, source='fr', target='en'):
     """
@@ -176,8 +176,12 @@ def translate_list(sentences, source='fr', target='en'):
     """
     results = list()
     for s in sentences:
-        response = translate(s, source, target)
-        results.append(response)
+        try:
+            response = translate(s, source, target)
+            results.append(response)
+        except ValueError:
+            print 's is not translatable'
+            raise
     return results
 
 def detect(text):

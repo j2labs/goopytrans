@@ -8,7 +8,7 @@ http://github.com/j2labs/goopytrans
 """
 
 import urllib
-import simplejson
+import json
 
 LANGUAGE_CHOICES = (
     (' ', 'auto_detect'),
@@ -143,13 +143,16 @@ def _run_query(url, args=None):
     """
     takes arguments and optional language argument and runs query on server
     """
+    print 'URL :: %s' % url
+    print 'args :: %s' % args
     if args != None:
         data = _unicode_urlencode(args)
         search_results = urllib.urlopen(url, data=data)
     else:
         search_results = urllib.urlopen(url)
-    json = simplejson.loads(search_results.read())
-    return json
+    results = search_results.read()
+    json_data = json.loads(results)
+    return json_data
 
 def translate(text, source='fr', target='en'):
     """
